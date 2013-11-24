@@ -1,45 +1,35 @@
-#include <stdlib.h>
-#include <GL/glut.h>
+#include "LUtil.h"
 
-void keyboard(unsigned char key, int x, int y);
-void display(void);
+void runMainLoop( int val );
+/*
+Pre Condition:
+ -Initialized freeGLUT
+Post Condition:
+ -Calls the main loop functions and sets itself to be called back in 1000 / SCREEN_FPS milliseconds
+Side Effects:
+ -Sets glutTimerFunc
+*/
 
+int main( int argc, char* args[] ) {
+    //Initialize FreeGLUT
+    glutInit( &argc, args );
+    //Create OpenGL 2.1 context
+    glutInitContextVersion( 2, 1 );
+    //Create Double Buffered Window
+    glutInitDisplayMode( GLUT_DOUBLE );
+    glutInitWindowSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+    glutCreateWindow( "OpenGL" );
+    //Do post window/context creation initialization
+    if ( !initGL() ) {
+        printf( "Unable to initialize graphics library!\n" );
+        return 1;
+    }
+    //Set rendering function
+    glutDisplayFunc( render );
+    //Set main loop
+    glutTimerFunc( 1000 / SCREEN_FPS, runMainLoop, 0 );
+    //Start GLUT main loop
+    glutMainLoop();
 
-int main(int argc, char** argv)
-{
-  glutInit(&argc, argv);
-  glutCreateWindow("GLUT Test");
-  glutKeyboardFunc(&keyboard);
-  glutDisplayFunc(&display);
-  glutMainLoop();
-
-  return EXIT_SUCCESS;
-}
-
-
-void keyboard(unsigned char key, int x, int y)
-{
-  switch (key)
-  {
-    case '\x1B':
-      exit(EXIT_SUCCESS);
-      break;
-  }
-}
-
-
-void display()
-{
-  glClear(GL_COLOR_BUFFER_BIT);
-
-  glColor3f(1.0f, 0.0f, 0.0f);
-
-  glBegin(GL_POLYGON);
-    glVertex2f(-0.5f, -0.5f);
-    glVertex2f( 0.5f, -0.5f);
-    glVertex2f( 0.5f,  0.5f);
-    glVertex2f(-0.5f,  0.5f);
-  glEnd();
-
-  glFlush();
+    return 0;
 }

@@ -54,3 +54,13 @@ void render()
     //Update screen
     glutSwapBuffers();
 }
+
+void runMainLoop( int val )
+{
+    //Frame logic
+    update();
+    render();
+
+    //Run frame one more time
+    glutTimerFunc( 1000 / SCREEN_FPS, runMainLoop, val );
+}
